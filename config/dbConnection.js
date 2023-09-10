@@ -7,7 +7,7 @@ mongoose.set("strictQuery",false)//if we are asking for extra data to access i.e
 const connectionToDB =async ()=>{
     try{
         const {connection}=await mongoose.connect( 
-            process.env.MONGO_URI  || `mongodb+srv://lms:lms123@cluster0.lzjm4un.mongodb.net/LMS`
+            process.env.MONGO_URI  || `mongodb+srv://<clusterusername>:<clusterpassword>@cluster0.lzjm4un.mongodb.net/LMS`
             )
     if(connection){
         console.log(`connected to DataBase ${connection.host}`);
