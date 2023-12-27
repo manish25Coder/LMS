@@ -2,7 +2,7 @@ NODE_ENV=development
 
 PORT=5000
 
-MONGO_URI=mongodb+srv://lms:lms123@cluster0.lzjm4un.mongodb.net/LMS
+MONGO_URI=<YOUR_DATABASE_URL>
 
 JWT_SECRET=<YOUR_LONG_JWT_SECRET>
 JWT_SECRET=<YOUR_EXPIRY>
