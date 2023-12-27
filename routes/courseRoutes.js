@@ -1,42 +1,43 @@
 import { Router } from "express";
-import { addLectureToCourseById, createCourse, getAllCourses, getLectureByCourseId, removeCourse, updateCourse } from "../controllers/courseController.js";
-import { authorizeSubscriber, authorizedRoles, isLoggedIn } from "../middleware/authMiddleware.js";
-import upload from '../middleware/multerMiddleware.js'
+import { addLectureToCourseById, createCourse, getAllCourses, getLecturesByCourseId, removeCourse, updateCourse, removeLecture } from "../controllers/courseController.js";
+import { authorizedRoles, authorizedSubscriber, isLoggedIn } from "../middleware/authMiddleware.js";
+import upload from "../middleware/multerMiddleware.js";
 
-const router=Router();
-
-// router.get('/',getAllCourses);
-
-router.route('/')
-    .get(isLoggedIn,authorizeSubscriber,getAllCourses)
+const router = Router();
+router.route("/")
+    .get(getAllCourses)
     .post(
         isLoggedIn,
-        authorizedRoles('ADMIN'),
-        upload.single('thumbnail'),
-        createCourse
+        authorizedRoles("ADMIN"),
+        upload.single("thumbnail"),
+        createCourse)
+    .delete(
+            isLoggedIn,
+            authorizedRoles("ADMIN"),
+            removeLecture
         )
-    
-
-router.route('/:id')
-    .get(isLoggedIn,getLectureByCourseId)
+router.route("/:id")
+    .get(
+        isLoggedIn,
+        authorizedSubscriber,
+        getLecturesByCourseId
+    )
     .put(
         isLoggedIn,
-        authorizedRoles('ADMIN'),
+        authorizedRoles("ADMIN"),
         updateCourse
-        )
-    .delete(
-        isLoggedIn,
-        authorizedRoles('ADMIN'),
-        removeCourse
-        )
+    )
+   
     .post(
         isLoggedIn,
-        authorizedRoles('ADMIN'),
-        upload.single('lecture'),
+        authorizedRoles("ADMIN"),
+        upload.single("lecture"),
         addLectureToCourseById
-        )
+    )
+    .delete(
+        isLoggedIn,
+        authorizedRoles("ADMIN"),
+        removeCourse
+    )
+
 export default router;
-
-
-
-

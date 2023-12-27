@@ -1,44 +1,44 @@
-import app from "../app.js";
+import User from "../models/userModel.js";
 import AppError from "../utils/errorUtil.js";
-import Jwt  from "jsonwebtoken";
-
-const isLoggedIn=async(req,res,next)=>{
-    const {token}=req.cookies;
+import  jwt  from "jsonwebtoken";
+const isLoggedIn = async (req, _res, next) => {
+    const { token } = req.cookies;
 
     if(!token){
-        return next(new AppError('Unauthenticated,please login again',400))
+        return next(new AppError("Unauthenticated, please login again", 401))
     }
 
-    const userDetails=await Jwt.verify(token,process.env.JWT.SECRET);
+    const userDetails = await jwt.verify(token, process.env.JWT_SECRET);
+    if(!userDetails){
+        return next(new AppError("Unauthorized ,please login to continue",401))
+    }
 
-    req.user=userDetails;
+    req.user = userDetails;
+
     next();
-
 }
 
 
-const authorizedRoles=(...roles)=>async (req,res,next)=>{
-    const currentUserRoles=req.user.role;
-    if(roles.includes(currentUserRoles)){
-        return next(new AppError('you do not have permission to access this route',500))
-    }
-    next()
-}
-
-const authorizeSubscriber=async(req,res,next)=>{
-    const subcription=req.user.subscription;
-    const currentUserRoles=req.user.role;
-
-    if(currentUserRoles !== 'ADMIN' && subcription.status !=='active'){
+const authorizedRoles = (...roles) => async(req,_res, next) => {
+    const currentUserRole = req.user.role;
+    if(!roles.includes(currentUserRole)){
         return next(
-            new AppError('please subscribce to access this route!',403)
+         new AppError("You do not have permission to access this route",403)
         )
     }
     next();
 }
 
-export{
+const authorizedSubscriber = async (req, _res, next)=>{
+   const user = await User.findById(req.user.id);
+  
+   if (user.role !== "ADMIN" && user.subscription.status !== "active") {
+    return next(new AppError("Please subscribe to access this route.", 403));
+  }
+    next()
+}
+export {
     isLoggedIn,
     authorizedRoles,
-    authorizeSubscriber
+    authorizedSubscriber
 }

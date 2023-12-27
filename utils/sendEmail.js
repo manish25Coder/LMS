@@ -1,26 +1,25 @@
 import nodemailer from "nodemailer";
 
-const sendEmail = async function(email, subject, message){
-    //creating reusable transport obj using default SMTP port
-    let transport=nodemailer.createTransport({
+//  async..await is not allowed in global scope, must use a wrapper
+const sendEmail = async function (email, subject, message){
+    //create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
-        secure:false,//True for 456 and false for other ports
-        auth:{
+        secure: false, //true for 465, false for other ports
+        auth: {
             user:process.env.SMTP_USERNAME,
-            pass: process.env.SMTP_PASSWORD,
+            pass:process.env.SMTP_PASSWORD,
         },
-
     });
 
-    //send mail with defined transport Object
-    await transport.sendMail({
-        from: process.env.SMTP_FROM_EMAIL,//sender Addresss
-        to:email,//user email
-        subject:subject,//subject line
-        html:meaasge,//html body
-
-    })
-}
+    //send mail with defiend transport object
+    await transporter.sendMail({
+        from: process.env.SMTP_FROM_EMAIL, // sender address
+        to: email , // list of receivers
+        subject: subject, // Subject line
+        html: message, // html body
+    });
+};
 
 export default sendEmail;
