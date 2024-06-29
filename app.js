@@ -38,9 +38,9 @@ app.use("/api/v1", allRoutes)
 
 
 //if the search url does not exist then is will show OOPS!
-// app.all("*",(req, res)=>{                       
-//     res.status(404).send("OOPS!!!")
-// })
+app.all("*",(req, res)=>{                       
+    res.status(404).send("OOPS!!!")
+})
 
 app.use(errorMiddleware);
 
