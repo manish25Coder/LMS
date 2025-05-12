@@ -18,7 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    // origin: process.env.FRONTEND_URL,
+   origin: "https://lms-frontend-1-rir8.onrender.com",
     // origin: "*",
     credentials: true
 }));
